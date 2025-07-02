@@ -8,3 +8,17 @@
   justify-content: space-between;
   align-items: center;
 }
+
+.list {
+  border: 1px solid black;
+  padding: 8px;
+}
+
+.todo {
+  border: 1px solid red;
+  padding-inline: 8px;
+}
+
+.checklist-items {
+  display: flex;
+}
