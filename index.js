@@ -1,9 +1,13 @@
 import App from './App.js'
 
-const app = new App(document.querySelector('body'))
+const app = new App(document.querySelector('.container'))
 app.addSection('Section 0')
 app.addTask(0, 'Task 0-0')
 app.addTask(0, 'Task 0-1')
+app.addTask(0, 'Task 0-2')
+app.addTask(0, 'Task 0-3')
+app.addTask(0, 'Task 0-4')
+app.addTask(0, 'Task 0-5')
 app.addSection('Section 1')
 app.addTask(1, 'Task 1-0')
 app.addTask(1, 'Task 1-1')
@@ -16,18 +20,18 @@ app.addTask(1, 'Task 1-1')
  * @param {Object} [options] - Component specific options
  * @returns {Object} Created component
  */
-const defaultChecklist = app.addTaskComponent(0, 0, 'checklist', {
-  title: 'Title',
-  items: [
-    { name: 'Item 1', checked: true },
-    { name: 'Item 2', checked: false },
-  ],
-})
+// const defaultChecklist = app.addTaskComponent(0, 0, 'checklist', {
+//   title: 'Title',
+//   items: [
+//     { name: 'Item 1', checked: true },
+//     { name: 'Item 2', checked: false },
+//   ],
+// })
 
-defaultChecklist.addItem('Item 3', false)
+// defaultChecklist.addItem('Item 3', false)
 
-// use to get the component
-// app.getTaskComponent(0, 0, 'checklist', 0)
+// // use to get the component
+// // app.getTaskComponent(0, 0, 'checklist', 0)
 
-// expose for testing
+// // expose for testing
 window.app = app
