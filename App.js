@@ -57,14 +57,22 @@ class Renderer {
     this.registry = registry
   }
 
-  render(sections) {
+  render(sectionsObj) {
     // Clearing before render
     this.container.replaceChildren()
 
-    sections.forEach((sectionObj, sectionId) => {
+    const sections = document.createElement('div')
+    sections.className = 'sections'
+    this.container.appendChild(sections)
+
+    const dialog = document.createElement('dialog')
+    dialog.className = 'details'
+    this.container.appendChild(dialog)
+
+    sectionsObj.forEach((sectionObj, sectionId) => {
       const section = document.createElement('div')
       section.className = 'section'
-      this.container.appendChild(section)
+      sections.appendChild(section)
 
       const sectionHeader = document.createElement('div')
       sectionHeader.className = 'section__header'
@@ -79,8 +87,8 @@ class Renderer {
       sectionDelete.className = 'section__delete'
       sectionDelete.textContent = 'X'
       sectionDelete.addEventListener('click', () => {
-        sections.splice(sectionId, 1)
-        this.render(sections)
+        sectionsObj.splice(sectionId, 1)
+        this.render(sectionsObj)
       })
       sectionHeader.appendChild(sectionDelete)
 
@@ -91,6 +99,7 @@ class Renderer {
       sectionObj.getTasks().forEach((taskObj, taskId) => {
         const taskContainer = document.createElement('div')
         taskContainer.className = 'task'
+        taskContainer.dataset.id = taskId
         sectionTasks.appendChild(taskContainer)
 
         const taskTitle = document.createElement('div')
@@ -102,25 +111,10 @@ class Renderer {
         taskDelete.className = 'task__delete'
         taskDelete.textContent = 'X'
         taskDelete.addEventListener('click', () => {
-          sections[sectionId].removeTask(taskId)
-          this.render(sections)
+          sectionsObj[sectionId].removeTask(taskId)
+          this.render(sectionsObj)
         })
         taskContainer.appendChild(taskDelete)
-        // Move to details render method
-        // Move to details render method
-        // Move to details render method
-        // const renderOrder = this.registry.getRenderOrder()
-        // renderOrder.forEach(type => {
-        //   const components = taskObj.getComponents()[type]
-        //   const COMPONENTS_ARRAY_EXISTS = typeof components === 'undefined'
-        //   if (COMPONENTS_ARRAY_EXISTS) {
-        //     return
-        //   }
-
-        //   components.forEach(component => {
-        //     task.appendChild(component.render())
-        //   })
-        // })
       })
 
       const taskAdd = document.createElement('div')
@@ -129,22 +123,58 @@ class Renderer {
       taskAdd.addEventListener('click', () => {
         // another reason to make SectionManager class or something similar
         sectionObj.addTask()
-        this.render(sections)
+        this.render(sectionsObj)
       })
       sectionTasks.appendChild(taskAdd)
+
+      section.addEventListener('click', event => {
+        const clickedElement = event.target
+
+        const isDeleteTaskButton = clickedElement.className === 'task__delete'
+        const taskElement = clickedElement.closest('.task')
+
+        const isTaskElement = taskElement && !isDeleteTaskButton
+        if (isTaskElement) {
+          const taskId = taskElement.dataset.id
+          const taskObj = sectionObj.getTask(taskId)
+          this.renderDetails(dialog, taskObj)
+        }
+      })
     })
     const sectionAdd = document.createElement('div')
     sectionAdd.className = 'add-section'
     sectionAdd.textContent = '+'
     sectionAdd.addEventListener('click', () => {
       // another reason to make SectionManager class or something similar
-      sections.push(new Section())
-      this.render(sections)
+      sectionsObj.push(new Section())
+      this.render(sectionsObj)
     })
-    this.container.appendChild(sectionAdd)
+    sections.appendChild(sectionAdd)
   }
 
-  renderDetails() {}
+  renderDetails(dialog, taskObj) {
+    // Clear before rendering
+    dialog.replaceChildren()
+
+    const title = document.createElement('h1')
+    title.textContent = taskObj.title
+    dialog.appendChild(title)
+
+    const renderOrder = this.registry.getRenderOrder()
+    renderOrder.forEach(type => {
+      const components = taskObj.getComponents()[type]
+      const COMPONENTS_ARRAY_EXISTS = typeof components === 'undefined'
+      if (COMPONENTS_ARRAY_EXISTS) {
+        return
+      }
+
+      components.forEach(component => {
+        dialog.appendChild(component.render())
+      })
+    })
+
+    dialog.showModal()
+  }
 }
 
 class ComponentRegistry {

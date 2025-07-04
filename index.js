@@ -20,13 +20,13 @@ app.addTask(1, 'Task 1-1')
  * @param {Object} [options] - Component specific options
  * @returns {Object} Created component
  */
-// const defaultChecklist = app.addTaskComponent(0, 0, 'checklist', {
-//   title: 'Title',
-//   items: [
-//     { name: 'Item 1', checked: true },
-//     { name: 'Item 2', checked: false },
-//   ],
-// })
+const defaultChecklist = app.addTaskComponent(0, 0, 'checklist', {
+  title: 'Title',
+  items: [
+    { name: 'Item 1', checked: true },
+    { name: 'Item 2', checked: false },
+  ],
+})
 
 // defaultChecklist.addItem('Item 3', false)
 
