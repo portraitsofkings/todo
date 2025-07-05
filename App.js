@@ -59,15 +59,14 @@ class Renderer {
 
   render(sectionsObj) {
     // Clearing before render
+
     this.container.replaceChildren()
 
     const sections = document.createElement('div')
     sections.className = 'sections'
     this.container.appendChild(sections)
 
-    const dialog = document.createElement('dialog')
-    dialog.className = 'details'
-    this.container.appendChild(dialog)
+    const dialog = document.querySelector('.details')
 
     sectionsObj.forEach((sectionObj, sectionId) => {
       const section = document.createElement('div')
@@ -137,7 +136,7 @@ class Renderer {
         if (isTaskElement) {
           const taskId = taskElement.dataset.id
           const taskObj = sectionObj.getTask(taskId)
-          this.renderDetails(dialog, taskObj)
+          this.renderDetails(taskObj)
         }
       })
     })
@@ -152,8 +151,9 @@ class Renderer {
     sections.appendChild(sectionAdd)
   }
 
-  renderDetails(dialog, taskObj) {
+  renderDetails(taskObj) {
     // Clear before rendering
+    const dialog = document.querySelector('.details')
     dialog.replaceChildren()
 
     const title = document.createElement('h1')
@@ -254,7 +254,13 @@ export default class App {
       return
     }
     const ComponentClass = this.componentRegistry.getClass(type)
-    const component = new ComponentClass(options ?? {}, this.update)
+    const component = new ComponentClass(
+      options ?? {},
+      this.renderer.renderDetails.bind(
+        this.renderer,
+        this.sections[sectionId].getTask(taskId)
+      )
+    )
     this.sections[sectionId].getTask(taskId).addComponent(type, component)
     this.update()
     return component

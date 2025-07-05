@@ -9,7 +9,7 @@ export default class Checklist {
     this.title = newTitle
   }
 
-  addItem(name, checked) {
+  addItem(name = 'Untitled', checked = false) {
     this.items.push({ name, checked })
     this.update()
   }
@@ -28,19 +28,33 @@ export default class Checklist {
     title.className = 'checklist__title'
     component.appendChild(title)
 
-    const itemContainer = document.createElement('div')
-    itemContainer.className = 'checklist__items'
+    const itemsContainer = document.createElement('div')
+    itemsContainer.className = 'checklist__items'
     this.items.forEach(itemObj => {
-      const text = document.createElement('p')
-      text.textContent = itemObj.name
-      itemContainer.appendChild(text)
+      const item = document.createElement('div')
+      item.className = 'checklist__item'
+      itemsContainer.appendChild(item)
 
       const checkbox = document.createElement('input')
       checkbox.setAttribute('type', 'checkbox')
       checkbox.checked = itemObj.checked
-      itemContainer.appendChild(checkbox)
+      checkbox.addEventListener('change', () => {
+        itemObj.checked = checkbox.checked
+      })
+      item.appendChild(checkbox)
+
+      const text = document.createElement('p')
+      text.textContent = itemObj.name
+      item.appendChild(text)
     })
-    component.appendChild(itemContainer)
+    const addItem = document.createElement('button')
+    addItem.textContent = '+ New Item'
+    addItem.addEventListener('click', () => {
+      this.addItem()
+    })
+    itemsContainer.appendChild(addItem)
+
+    component.appendChild(itemsContainer)
 
     return component
   }

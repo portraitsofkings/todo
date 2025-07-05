@@ -125,3 +125,8 @@ body {
   align-items: center;
   border-radius: 8px;
 }
+
+.checklist__item {
+  display: flex;
+  gap: 4px;
+}
