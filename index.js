@@ -1,37 +1,31 @@
 import App from './App.js'
+// import Checklist from './components/Checklist.js'
 
-const app = new App(document.querySelector('.container'))
-app.addSection('Section 0')
-app.addTask(0, 'Task 0-0')
-app.addTask(0, 'Task 0-1')
-app.addTask(0, 'Task 0-2')
-app.addTask(0, 'Task 0-3')
-app.addTask(0, 'Task 0-4')
-app.addTask(0, 'Task 0-5')
-app.addSection('Section 1')
-app.addTask(1, 'Task 1-0')
-app.addTask(1, 'Task 1-1')
+const app = new App(
+  document.querySelector('.container'),
+  document.querySelector('.details')
+)
 
-/**
- * Example of how to use addTaskComponent
- * @param {number} sectionId  - Section ID
- * @param {number} taskId  - Task ID
- * @param {string} type - Component type
- * @param {Object} [options] - Component specific options
- * @returns {Object} Created component
- */
-const defaultChecklist = app.addTaskComponent(0, 0, 'checklist', {
-  title: 'Title',
-  items: [
-    { name: 'Item 1', checked: true },
-    { name: 'Item 2', checked: false },
-  ],
+app.addSection('Default section')
+
+app.addTask(0, {
+  title: 'Normal',
+  description: "This is the first\ntask's description",
 })
 
-// defaultChecklist.addItem('Item 3', false)
+// app.addTaskComponent(0, 0, {
+//   type: 'checklist',
+//   component: new Checklist('Checklist'),
+// })
 
-// // use to get the component
-// // app.getTaskComponent(0, 0, 'checklist', 0)
+app.addTask(0, {
+  title: 'Low priority',
+  description: 'I have low priority',
+  priority: 1,
+})
 
-// // expose for testing
-window.app = app
+app.addTask(0, {
+  title: 'High priority',
+  description: 'I have high priority',
+  priority: 3,
+})

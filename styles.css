@@ -130,3 +130,20 @@ body {
   display: flex;
   gap: 4px;
 }
+
+.details__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.high-priority {
+  background-color: #ffc8c8;
+}
+
+.normal-priority {
+  background-color: #fff7c8;
+}
+
+.low-priority {
+  background-color: #c8d0ff;
+}
