@@ -3,9 +3,13 @@ export default class SectionManager {
   #sections = []
 
   addSection(title) {
-    // const onChange = data.onChange
-    this.#sections.push(new Section(title))
-    // onChange()
+    const section = new Section(title)
+    this.#sections.push(section)
+    return section
+  }
+
+  removeSection(sectionId) {
+    this.#sections.splice(sectionId, 1)
   }
 
   getSection(sectionId) {
@@ -17,8 +21,15 @@ export default class SectionManager {
         )
   }
 
+  toJSON() {
+    const sections = []
+    this.#sections.forEach(section => {
+      sections.push(section.toJSON())
+    })
+    return sections
+  }
+
   getSections() {
-    // FIXME: return copy of this?
     return this.#sections
   }
 
@@ -27,6 +38,11 @@ export default class SectionManager {
     return section
       ? section.addTask(taskData)
       : console.error('SectionManager:addTask: Incorrect sectionId', taskData)
+  }
+
+  removeTask(sectionId, taskId) {
+    const section = this.getSection(sectionId)
+    return section.removeTask(taskId)
   }
 
   getTask(sectionId, taskId) {

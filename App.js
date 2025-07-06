@@ -5,6 +5,34 @@ export default class App {
   constructor(container, detailsContainer) {
     this.manager = new SectionManager()
     this.renderer = new Renderer(container, detailsContainer)
+    this.load()
+    this.update()
+  }
+
+  load() {
+    const sectionsString = localStorage.getItem('sections')
+    const sections = JSON.parse(sectionsString)
+    if (sections === null) {
+      // Default data
+      this.addSection('Default section')
+      this.addTask(0, {
+        title: 'Normal',
+        description: "This is the first\ntask's description",
+      })
+      return
+    }
+    sections.forEach(section => {
+      const tasks = section.tasks
+      const sectionObj = this.manager.addSection(section.title)
+      tasks.forEach(task => {
+        sectionObj.addTask(task)
+      })
+    })
+  }
+
+  save() {
+    const sections = [...this.manager.toJSON()]
+    localStorage.setItem('sections', JSON.stringify(sections))
   }
 
   update() {
@@ -12,18 +40,26 @@ export default class App {
   }
 
   addSection(title) {
-    // data.onChange = () => {
-    //   this.renderer.render(this)
-    // }
     this.manager.addSection(title)
+    this.save()
+    this.update()
+  }
+
+  removeSection(sectionId) {
+    this.manager.removeSection(sectionId)
+    this.save()
     this.update()
   }
 
   addTask(sectionId, taskData) {
-    // data.onChange = () => {
-    //   this.renderer.render(this)
-    // }
     this.manager.addTask(sectionId, taskData)
+    this.save()
+    this.update()
+  }
+
+  removeTask(sectionId, taskId) {
+    this.manager.removeTask(sectionId, taskId)
+    this.save()
     this.update()
   }
 

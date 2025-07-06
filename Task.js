@@ -1,9 +1,14 @@
 export default class Task {
-  constructor({ title = 'Untitled', description = '', priority = 2 }) {
+  constructor({
+    title = 'Untitled',
+    description = '',
+    priority = 2,
+    dueDate = new Date(),
+  }) {
     this.title = title
     this.description = description
     this.priority = priority
-    this.dueDate = new Date()
+    this.dueDate = new Date(dueDate)
   }
 
   setTitle(newTitle) {
@@ -21,17 +26,6 @@ export default class Task {
   setDueDate(newDueDate) {
     this.dueDate = newDueDate
   }
-
-  // addChecklist()
-
-  // addComponent(component) {
-  //   console.log(component)
-  //   const type = component.type
-  //   if (!this.components[type]) {
-  //     this.components[type] = []
-  //   }
-  //   this.components[type].push(component)
-  // }
 
   update({ title, description, components }) {
     if (title !== undefined) {

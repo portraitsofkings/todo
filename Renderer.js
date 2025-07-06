@@ -19,10 +19,15 @@ export default class Renderer {
       section.className = 'section'
       sectionsContainer.appendChild(section)
       // ======================================
+      const sectionHeader = document.createElement('div')
+      sectionHeader.className = 'section__header'
+
+      section.appendChild(sectionHeader)
+      // ======================================
       const sectionTitle = document.createElement('h2')
       sectionTitle.textContent = sectionData.title
       sectionTitle.className = 'section__title'
-      section.appendChild(sectionTitle)
+      sectionHeader.appendChild(sectionTitle)
 
       sectionTitle.addEventListener('click', () => {
         sectionTitle.style.display = 'none'
@@ -36,10 +41,11 @@ export default class Renderer {
           sectionData.title = sectionTitleInput.value
           sectionTitle.style.display = 'block'
           sectionTitleInput.remove()
+          app.save()
           app.update()
         }
 
-        sectionTitleInput.addEventListener('blur', event => {
+        sectionTitleInput.addEventListener('blur', () => {
           stopEdit()
         })
 
@@ -50,6 +56,14 @@ export default class Renderer {
         })
       })
       // ======================================
+      const sectionDelete = document.createElement('button')
+      sectionDelete.textContent = 'X'
+      sectionDelete.className = 'section__delete'
+      sectionDelete.addEventListener('click', () => {
+        app.removeSection(sectionId)
+      })
+      sectionHeader.appendChild(sectionDelete)
+      // ======================================
       const sectionTasks = document.createElement('div')
       sectionTasks.className = 'section__tasks'
       section.appendChild(sectionTasks)
@@ -58,6 +72,9 @@ export default class Renderer {
         const clickedElement = event.target
         const taskElement = clickedElement.closest('.task')
         if (taskElement === null) {
+          return
+        }
+        if (clickedElement.classList.contains('task__delete')) {
           return
         }
         const taskId = taskElement.getAttribute('data-id')
@@ -91,6 +108,14 @@ export default class Renderer {
           taskTitle.className = 'task__title'
           taskTitle.textContent = taskData.title
           task.appendChild(taskTitle)
+
+          const taskDelete = document.createElement('button')
+          taskDelete.className = 'task__delete'
+          taskDelete.textContent = 'X'
+          taskDelete.addEventListener('click', () => {
+            app.removeTask(sectionId, taskId)
+          })
+          task.appendChild(taskDelete)
         })
       const taskAdd = document.createElement('button')
       taskAdd.className = 'task-add'
@@ -174,6 +199,7 @@ export default class Renderer {
 
     const dueDateInput = document.createElement('input')
     const date = taskData.dueDate
+    console.log(taskData)
     dueDateInput.value = `${date.getFullYear()}-${String(
       date.getMonth() + 1
     ).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
@@ -206,7 +232,7 @@ export default class Renderer {
       taskData.setDescription(newDescription)
       taskData.setPriority(newPriority)
       taskData.setDueDate(newDueDate)
-
+      app.save()
       app.update()
     })
 
